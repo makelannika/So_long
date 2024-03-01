@@ -18,8 +18,19 @@
 # include "MLX42/include/MLX42/MLX42.h"
 # include "libft/libft.h"
 
-#define WIDTH 720
-#define HEIGHT 480
+typedef struct s_map
+{
+	size_t	width;
+	int		height;
+	int		collectibles;
+}	t_map;
 
+char	**get_map(char **argv, char **map, t_map *stats);
+size_t	get_map_height(int fd, t_map *stats);
+int		map_check(char **map, t_map *stats);
+int		component_check(char **map, t_map *stats);
+int		shape_check(char **map, t_map *stats);
+int		wall_check(char **map, t_map *stats);
+int		count_symbols(char **map, char symbol);
 
 #endif

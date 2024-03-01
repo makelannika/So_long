@@ -13,7 +13,6 @@
 #include "libft.h"
 
 static int		word_count(char const *s, char c);
-static char		**freestr(char **array, int j);
 static char		**fill_array(char **array, char const *s, char c);
 
 char	**ft_split(char const *s, char c)
@@ -67,7 +66,7 @@ static char	**fill_array(char **array, char const *s, char c)
 		{
 			array[j++] = ft_substr(s, i - strl, strl);
 			if (array[j - 1] == 0)
-				return (freestr(array, j));
+				return (free_arr(array, j));
 		}
 		while (s[i] && s[i] == c)
 			i ++;
@@ -76,7 +75,7 @@ static char	**fill_array(char **array, char const *s, char c)
 	return (array);
 }
 
-static char	**freestr(char **array, int j)
+char	**free_arr(char **array, int j)
 {
 	int	i;
 

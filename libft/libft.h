@@ -75,10 +75,11 @@ void	ft_lstclear(t_list **lst, void (*del)(void*));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 int		ft_printchar(char c);
-int     ft_printf(const char *format, ...);
-int     ft_printhex(unsigned long nbr, char specifier, int *count);
-int     ft_printnbr(long nbr, int *count);
-int     ft_printstr(char *str);
-char    *get_next_line(int fd);
+int		ft_printf(const char *format, ...);
+int		ft_printhex(unsigned long nbr, char specifier, int *count);
+int		ft_printnbr(long nbr, int *count);
+int		ft_printstr(char *str);
+char	*get_next_line(int fd);
+char	**free_arr(char **array, int j);
 
 #endif
