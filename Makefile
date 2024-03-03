@@ -47,6 +47,6 @@ fclean: clean
 	make -C $(LIBFTDIR) fclean
 	rm -f $(LIBMLX)/build/libmlx42.a
 
-re: fclean $(NAME)
+re: fclean all
 
 .PHONY: all clean fclean re libmlx

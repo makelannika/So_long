@@ -18,19 +18,30 @@
 # include "MLX42/include/MLX42/MLX42.h"
 # include "libft/libft.h"
 
+typedef struct s_point
+{
+	int	y;
+	int	x;
+}	t_point;
+
 typedef struct s_map
 {
-	size_t	width;
-	int		height;
+	t_point	*size;
+	t_point	*player;
+	t_point	*exit;
 	int		collectibles;
 }	t_map;
 
-char	**get_map(char **argv, char **map, t_map *stats);
-size_t	get_map_height(int fd, t_map *stats);
-int		map_check(char **map, t_map *stats);
-int		component_check(char **map, t_map *stats);
-int		shape_check(char **map, t_map *stats);
-int		wall_check(char **map, t_map *stats);
-int		count_symbols(char **map, char symbol);
+char	**get_map(char **argv, char **map, t_map *data);
+size_t	get_map_height(int fd, t_map *data);
+int		map_check(char **map, t_map *data);
+int		component_check(char **map, t_map *data);
+int		shape_check(char **map, t_map *data);
+int		wall_check(char **map, t_map *data);
+int		symbol_check(char **map, t_map *data, char symbol);
+int		count_symbols(char **map, t_map *data, char symbol);
+int		set_coordinates(t_map *data, char symbol, int y, int x);
+int		path_check(char **map, t_point *player, t_map *data);
+void	fill_map(char **map, t_point curr);
 
 #endif
