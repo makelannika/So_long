@@ -43,5 +43,7 @@ int		count_symbols(char **map, t_map *data, char symbol);
 int		set_coordinates(t_map *data, char symbol, int y, int x);
 int		path_check(char **map, t_point *player, t_map *data);
 void	fill_map(char **map, t_point curr);
+int		so_long(t_map *data);
+int		free_data(t_map *data);
 
 #endif

@@ -13,16 +13,19 @@
 #include "so_long.h"
 #include <fcntl.h>
 
+#define HEIGHT 600
+#define WIDTH 600
+
 int	main(int argc, char **argv)
 {
-	t_map	*data;
-	char	**map;
+	t_map		*data;
+	char		**map;
 
 	int	i = 0;
 	if (argc != 2)
 		return (0);
 	map = NULL;
-	data = malloc(sizeof(t_map));
+	data = ft_calloc(1, sizeof(t_map));
 	if (!data)
 		return (0);
 	map = get_map(argv, map, data);
@@ -36,13 +39,33 @@ int	main(int argc, char **argv)
 	ft_printf("map width: %d\n", data->size->x);
 	ft_printf("map height: %d\n", data->size->y);
 	ft_printf("collectibles: %d\n", data->collectibles);
-	ft_printf("\n\n");
+	ft_printf("\n");
 	while (map[i])
 		ft_printf("%s", map[i++]);
 	ft_printf("\n");
 	ft_printf("player's coordinates y: %d x: %d\n", data->player->y, data->player->x);
 	ft_printf("exit's coordinates y: %d x: %d\n\n", data->exit->y, data->exit->x);
+	so_long(data);
+	free_arr(map, data->size->y);
+	free_data(data);
 	return (0);
+}
+
+int	so_long(t_map *data)
+{
+	mlx_t		*mlx;
+	mlx_image_t	*img;
+
+	mlx = mlx_init(WIDTH, HEIGHT, "So_long", false);
+	if (!mlx)
+		return(0);
+	img = mlx_new_image(mlx, data->size->x * 46, data->size->y * 46);
+	ft_memset(img->pixels, 255, img->width * img->height * sizeof(int32_t));
+	if (!img || (mlx_image_to_window(mlx, img, 0, 0) < 0))
+		return(0);
+	mlx_loop(mlx);
+	mlx_terminate(mlx);
+	return (1);
 }
 
 char	**get_map(char **argv, char **map, t_map *data)
@@ -52,7 +75,7 @@ char	**get_map(char **argv, char **map, t_map *data)
 
 	i = 0;
 	fd = open(argv[1], O_RDONLY);
-	if (get_map_height(fd, data) < 3)
+	if (!get_map_height(fd, data))
 	{
 		close(fd);
 		return (NULL);
@@ -61,12 +84,18 @@ char	**get_map(char **argv, char **map, t_map *data)
 	fd = open(argv[1], O_RDONLY);
 	map = malloc(sizeof(char *) * (data->size->y + 1));
 	if (!map)
+	{
+		free(data->size);
 		return (NULL);
+	}
 	while (i < data->size->y)
 	{
 		map[i++] = get_next_line(fd);
 		if (map[i - 1] == NULL)
+		{
+			free(data->size);
 			return (free_arr(map, i));
+		}
 	}
 	map[i] = NULL;
 	return (map);
@@ -79,10 +108,7 @@ size_t	get_map_height(int fd, t_map *data)
 
 	size = ft_calloc(1, sizeof(t_point));
 	if (!size)
-	{
-		free(data);
 		return (0);
-	}
 	line = get_next_line(fd);
 	while (line)
 	{
@@ -100,6 +126,9 @@ int	map_check(char **map, t_map *data)
 		!path_check(map, data->player, data))
 	{
 		ft_printf("Invalid map\n");
+		free_arr(map, data->size->y);
+		free(data->size);
+		free(data);
 		return (0);
 	}
 	ft_printf("Valid map\n\n");
@@ -234,22 +263,29 @@ int	path_check(char **map, t_point *player, t_map *data)
 	copy = malloc(sizeof(char *) * (data->size->y + 1));
 	if (!copy)
 	{
-		free(map);
+		free_arr(map, data->size->y);
+		free(data->size);
+		free(data->size);
 		free(data);
 		return (-1);
 	}
 	while (i < data->size->y)
 	{
 		copy[i] = ft_strdup(map[i]);
+		if (!copy[i])
+		{
+			free_arr(copy, i);
+			return (0);
+		}
 		i++;
 	}
 	fill_map(copy, *player);
 	if (count_symbols(copy, data, 'C') || count_symbols(copy, data, 'E'))
 	{
-		free(copy);
+		free_arr(copy, i);
 		return (0);
 	}
-	free(copy);
+	free_arr(copy, i);
 	return (1);
 }
 
@@ -270,10 +306,7 @@ int	set_coordinates(t_map *data, char symbol, int y, int x)
 
 	coordinates = malloc(sizeof(t_point));
 	if (!coordinates)
-	{
-		free(data);
 		return (0);
-	}
 	coordinates->y = y;
 	coordinates->x = x;
 	if (symbol == 'P')
@@ -281,4 +314,13 @@ int	set_coordinates(t_map *data, char symbol, int y, int x)
 	else if (symbol == 'E')
 		data->exit = coordinates;
 	return (1);
+}
+
+int	free_data(t_map *data)
+{
+	free(data->size);
+	free(data->player);
+	free(data->exit);
+	free(data);
+	return (0);
 }
