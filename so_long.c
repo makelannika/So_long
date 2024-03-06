@@ -13,8 +13,8 @@
 #include "so_long.h"
 #include <fcntl.h>
 
-#define HEIGHT 600
-#define WIDTH 600
+#define HEIGHT 1000
+#define WIDTH 1500
 
 int	main(int argc, char **argv)
 {
@@ -53,15 +53,27 @@ int	main(int argc, char **argv)
 
 int	so_long(t_map *data)
 {
-	mlx_t		*mlx;
-	mlx_image_t	*img;
+	mlx_t			*mlx;
+	mlx_image_t		*img;
+	mlx_texture_t	*texture;
 
+	data->collectibles = data->collectibles;
 	mlx = mlx_init(WIDTH, HEIGHT, "So_long", false);
 	if (!mlx)
 		return(0);
-	img = mlx_new_image(mlx, data->size->x * 46, data->size->y * 46);
-	ft_memset(img->pixels, 255, img->width * img->height * sizeof(int32_t));
-	if (!img || (mlx_image_to_window(mlx, img, 0, 0) < 0))
+	texture = mlx_load_png("./grass.png");
+	img = mlx_texture_to_image(mlx, texture);
+	if (!img)
+		return (0);
+	mlx_resize_image(img, WIDTH, HEIGHT);
+	if (mlx_image_to_window(mlx, img, 0, 0 < 0))
+		return(0);
+	texture = mlx_load_png("./lizard.png");
+	img = mlx_texture_to_image(mlx, texture);
+	if (!img)
+		return (0);
+	mlx_resize_image(img, HEIGHT / 5, HEIGHT / 5);
+	if (mlx_image_to_window(mlx, img, 200, 200 < 0))
 		return(0);
 	mlx_loop(mlx);
 	mlx_terminate(mlx);
