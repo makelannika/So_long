@@ -13,19 +13,19 @@
 #include "so_long.h"
 #include <fcntl.h>
 
-#define HEIGHT 1000
-#define WIDTH 1500
+#define HEIGHT 100
+#define WIDTH 100
 
 int	main(int argc, char **argv)
 {
-	t_map		*data;
-	char		**map;
+	t_map_data		*data;
+	char			**map;
 
 	int	i = 0;
 	if (argc != 2)
 		return (0);
 	map = NULL;
-	data = ft_calloc(1, sizeof(t_map));
+	data = ft_calloc(1, sizeof(t_map_data));
 	if (!data)
 		return (0);
 	map = get_map(argv, map, data);
@@ -34,6 +34,7 @@ int	main(int argc, char **argv)
 		free(data);
 		return (0);
 	}
+	ft_printf("height: %d width: %d\n", HEIGHT, WIDTH);
 	if (!map_check(map, data))
 		return (0);
 	ft_printf("map width: %d\n", data->size->x);
@@ -51,36 +52,137 @@ int	main(int argc, char **argv)
 	return (0);
 }
 
-int	so_long(t_map *data)
+int	so_long(t_map_data *data)
 {
 	mlx_t			*mlx;
 	mlx_image_t		*img;
-	mlx_texture_t	*texture;
+	mlx_texture_t	*sand;
 
-	data->collectibles = data->collectibles;
-	mlx = mlx_init(WIDTH, HEIGHT, "So_long", false);
+	mlx_set_setting(MLX_STRETCH_IMAGE, true);
+	mlx = mlx_init(WIDTH * data->size->x, HEIGHT * data->size->y, "So_long", true);
 	if (!mlx)
 		return(0);
-	texture = mlx_load_png("./grass.png");
-	img = mlx_texture_to_image(mlx, texture);
+	data->mlx = mlx;
+	sand = mlx_load_png("./sand.png");
+	get_textures(data);
+	img = mlx_texture_to_image(data->mlx, sand);
 	if (!img)
 		return (0);
-	mlx_resize_image(img, WIDTH, HEIGHT);
-	if (mlx_image_to_window(mlx, img, 0, 0 < 0))
+	mlx_resize_image(img, WIDTH * data->size->x, HEIGHT * data->size->y);
+	if (mlx_image_to_window(data->mlx, img, 0, 0 < 0))
 		return(0);
-	texture = mlx_load_png("./lizard.png");
-	img = mlx_texture_to_image(mlx, texture);
-	if (!img)
-		return (0);
-	mlx_resize_image(img, HEIGHT / 5, HEIGHT / 5);
-	if (mlx_image_to_window(mlx, img, 200, 200 < 0))
-		return(0);
+	draw_map(data);
+	mlx_key_hook(mlx, &my_keyhook, data);
 	mlx_loop(mlx);
 	mlx_terminate(mlx);
 	return (1);
 }
 
-char	**get_map(char **argv, char **map, t_map *data)
+int	draw_map(t_map_data *data)
+{
+	int	y = 0;
+	int	x = 0;
+	while (data->map[y])
+	{
+		while (data->map[y][x])
+		{
+			if (data->map[y][x] == '1')
+			{
+				if (mlx_image_to_window(data->mlx, data->plant, x * WIDTH, y * HEIGHT) < 0)
+					return(0);
+			}
+			else if (data->map[y][x] == 'C')
+			{
+				if (mlx_image_to_window(data->mlx, data->shell, x * WIDTH, y * HEIGHT) < 0)
+					return(0);
+			}
+			else if (data->map[y][x] == 'P')
+			{
+				if (mlx_image_to_window(data->mlx, data->crab, x * WIDTH, y * HEIGHT) < 0)
+					return(0);
+			}
+			else if (data->map[y][x] == 'E')
+			{
+				if (mlx_image_to_window(data->mlx, data->hole, x * WIDTH , y * HEIGHT) < 0)
+					return(0);
+			}
+			x++;
+		}
+		y++;
+		x = 0;
+	}
+	return (1);
+}
+
+int	get_textures(t_map_data *data)
+{
+	mlx_texture_t	*plant;
+	mlx_texture_t	*shell;
+	mlx_texture_t	*crab;
+	mlx_texture_t	*hole;
+
+	plant = mlx_load_png("./plant.png");
+	data->plant = get_image(data, plant);
+	shell = mlx_load_png("./shell5.png");
+	data->shell = get_image(data, shell);
+	crab = mlx_load_png("./crab2.png");
+	data->crab = get_image(data, crab);
+	hole = mlx_load_png("./exit2.png");
+	data->hole = get_image(data, hole);
+	return (1);
+}
+
+mlx_image_t	*get_image(t_map_data *data, mlx_texture_t *texture)
+{
+	mlx_image_t		*img;
+
+	img = mlx_texture_to_image(data->mlx, texture);
+	mlx_resize_image(img, WIDTH, HEIGHT);
+	if (!img)
+	return (NULL);
+	return (img);
+}
+
+void my_keyhook(mlx_key_data_t keydata, void *data)
+{
+	t_map_data *mdata;
+
+	mdata = data;
+	if (keydata.key == MLX_KEY_LEFT && keydata.action == MLX_PRESS)
+		{
+			if (mdata->map[mdata->player->y][mdata->player->x - 1] != '1')
+			{
+			mdata->player->x = mdata->player->x - 1;
+			mdata->crab->instances->x = (mdata->player->x * WIDTH);
+			}
+		}
+	else if (keydata.key == MLX_KEY_UP && keydata.action == MLX_PRESS)
+		{
+			if (mdata->map[mdata->player->y - 1][mdata->player->x] != '1')
+			{
+			mdata->player->y = mdata->player->y - 1;
+			mdata->crab->instances->y = (mdata->player->y * WIDTH);
+			}
+		}
+	else if (keydata.key == MLX_KEY_RIGHT && keydata.action == MLX_PRESS)
+		{
+			if (mdata->map[mdata->player->y][mdata->player->x + 1] != '1')
+			{
+			mdata->player->x = mdata->player->x + 1;
+			mdata->crab->instances->x = (mdata->player->x * HEIGHT);
+			}
+		}
+	else if (keydata.key == MLX_KEY_DOWN && keydata.action == MLX_PRESS)
+		{
+			if (mdata->map[mdata->player->y + 1][mdata->player->x] != '1')
+			{
+			mdata->player->y = mdata->player->y + 1;
+			mdata->crab->instances->y = (mdata->player->y * HEIGHT);
+			}
+		}
+}
+
+char	**get_map(char **argv, char **map, t_map_data *data)
 {
 	int		i;
 	int		fd;
@@ -110,10 +212,11 @@ char	**get_map(char **argv, char **map, t_map *data)
 		}
 	}
 	map[i] = NULL;
+	data->map = map;
 	return (map);
 }
 
-size_t	get_map_height(int fd, t_map *data)
+size_t	get_map_height(int fd, t_map_data *data)
 {
 	char	*line;
 	t_point	*size;
@@ -132,7 +235,7 @@ size_t	get_map_height(int fd, t_map *data)
 	return (size->y);
 }
 
-int	map_check(char **map, t_map *data)
+int	map_check(char **map, t_map_data *data)
 {
 	if (!component_check(map, data) || !shape_check(map, data) ||
 		!path_check(map, data->player, data))
@@ -147,7 +250,7 @@ int	map_check(char **map, t_map *data)
 	return (1);
 }
 
-int	component_check(char **map, t_map *data)
+int	component_check(char **map, t_map_data *data)
 {
 	int	y;
 	int	x;
@@ -171,7 +274,7 @@ int	component_check(char **map, t_map *data)
 	return (1);
 }
 
-int	symbol_check(char **map, t_map *data, char symbol)
+int	symbol_check(char **map, t_map_data *data, char symbol)
 {
 	int	count;
 
@@ -193,7 +296,7 @@ int	symbol_check(char **map, t_map *data, char symbol)
 	return (1);
 }
 
-int	count_symbols(char **map, t_map *data, char symbol)
+int	count_symbols(char **map, t_map_data *data, char symbol)
 {
 	int	y;
 	int	x;
@@ -222,7 +325,7 @@ int	count_symbols(char **map, t_map *data, char symbol)
 	return (count);
 }
 
-int	shape_check(char **map, t_map *data)
+int	shape_check(char **map, t_map_data *data)
 {
 	int	y;
 
@@ -236,10 +339,11 @@ int	shape_check(char **map, t_map *data)
 	}
 	if (!wall_check(map, data))
 		return (0);
+	data->size->x = data->size->x - 1;
 	return (1);
 }
 
-int	wall_check(char **map, t_map *data)
+int	wall_check(char **map, t_map_data *data)
 {
 	int	x;
 	int	y;
@@ -266,7 +370,7 @@ int	wall_check(char **map, t_map *data)
 	return (1);
 }
 
-int	path_check(char **map, t_point *player, t_map *data)
+int	path_check(char **map, t_point *player, t_map_data *data)
 {
 	int i;
 	char **copy;
@@ -312,7 +416,7 @@ void	fill_map(char **map, t_point curr)
 	fill_map(map, (t_point){curr.y, curr.x + 1});
 }
 
-int	set_coordinates(t_map *data, char symbol, int y, int x)
+int	set_coordinates(t_map_data *data, char symbol, int y, int x)
 {
 	t_point *coordinates;
 
@@ -328,7 +432,7 @@ int	set_coordinates(t_map *data, char symbol, int y, int x)
 	return (1);
 }
 
-int	free_data(t_map *data)
+int	free_data(t_map_data *data)
 {
 	free(data->size);
 	free(data->player);
