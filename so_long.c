@@ -34,7 +34,6 @@ int	main(int argc, char **argv)
 		free(data);
 		return (0);
 	}
-	ft_printf("height: %d width: %d\n", HEIGHT, WIDTH);
 	if (!map_check(map, data))
 		return (0);
 	ft_printf("map width: %d\n", data->size->x);
@@ -44,37 +43,28 @@ int	main(int argc, char **argv)
 	while (map[i])
 		ft_printf("%s", map[i++]);
 	ft_printf("\n");
+	get_id_map(data);
 	ft_printf("player's coordinates y: %d x: %d\n", data->player->y, data->player->x);
-	ft_printf("exit's coordinates y: %d x: %d\n\n", data->exit->y, data->exit->x);
 	so_long(data);
-	free_arr(map, data->size->y);
 	free_data(data);
 	return (0);
 }
 
 int	so_long(t_map_data *data)
 {
-	mlx_t			*mlx;
-	mlx_image_t		*img;
-	mlx_texture_t	*sand;
-
 	mlx_set_setting(MLX_STRETCH_IMAGE, true);
-	mlx = mlx_init(WIDTH * data->size->x, HEIGHT * data->size->y, "So_long", true);
-	if (!mlx)
+	data->mlx = mlx_init(WIDTH * data->size->x, HEIGHT * data->size->y, "So_long", true);
+	if (!data->mlx)
 		return(0);
-	data->mlx = mlx;
-	sand = mlx_load_png("./sand.png");
-	get_textures(data);
-	img = mlx_texture_to_image(data->mlx, sand);
-	if (!img)
+	if (!get_textures(data))
 		return (0);
-	mlx_resize_image(img, WIDTH * data->size->x, HEIGHT * data->size->y);
-	if (mlx_image_to_window(data->mlx, img, 0, 0 < 0))
+	if (mlx_image_to_window(data->mlx, data->sand, 0, 0 < 0))
 		return(0);
-	draw_map(data);
-	mlx_key_hook(mlx, &my_keyhook, data);
-	mlx_loop(mlx);
-	mlx_terminate(mlx);
+	if (!draw_map(data))
+		return (0);
+	mlx_key_hook(data->mlx, &my_keyhook, data);
+	mlx_loop(data->mlx);
+	mlx_terminate(data->mlx);
 	return (1);
 }
 
@@ -82,6 +72,7 @@ int	draw_map(t_map_data *data)
 {
 	int	y = 0;
 	int	x = 0;
+	int id = 0;
 	while (data->map[y])
 	{
 		while (data->map[y][x])
@@ -93,8 +84,10 @@ int	draw_map(t_map_data *data)
 			}
 			else if (data->map[y][x] == 'C')
 			{
-				if (mlx_image_to_window(data->mlx, data->shell, x * WIDTH, y * HEIGHT) < 0)
+				id = mlx_image_to_window(data->mlx, data->shell, x * WIDTH, y * HEIGHT);
+				if (id < 0)
 					return(0);
+				data->id_map[y][x] = id;
 			}
 			else if (data->map[y][x] == 'P')
 			{
@@ -116,70 +109,132 @@ int	draw_map(t_map_data *data)
 
 int	get_textures(t_map_data *data)
 {
+	mlx_texture_t	*sand;
 	mlx_texture_t	*plant;
 	mlx_texture_t	*shell;
 	mlx_texture_t	*crab;
 	mlx_texture_t	*hole;
 
+	sand = mlx_load_png("./sand.png");
 	plant = mlx_load_png("./plant.png");
-	data->plant = get_image(data, plant);
 	shell = mlx_load_png("./shell5.png");
-	data->shell = get_image(data, shell);
 	crab = mlx_load_png("./crab2.png");
-	data->crab = get_image(data, crab);
 	hole = mlx_load_png("./exit2.png");
+	if (!sand || !plant || !shell || !crab || !hole)
+		return (0);
+	data->sand = get_background(data, sand);
+	data->plant = get_image(data, plant);
+	data->shell = get_image(data, shell);
+	data->crab = get_image(data, crab);
 	data->hole = get_image(data, hole);
+	if (!data->sand || !data->plant || !data->shell || !data->crab || !data->hole)
+		return (0);
 	return (1);
+}
+
+mlx_image_t	*get_background(t_map_data *data, mlx_texture_t *texture)
+{
+	mlx_image_t	*img;
+
+	img = mlx_texture_to_image(data->mlx, texture);
+	if (!img || !mlx_resize_image(img, WIDTH * data->size->x, HEIGHT * data->size->y))
+		return (NULL);
+	return (img);
 }
 
 mlx_image_t	*get_image(t_map_data *data, mlx_texture_t *texture)
 {
-	mlx_image_t		*img;
+	mlx_image_t	*img;
 
 	img = mlx_texture_to_image(data->mlx, texture);
-	mlx_resize_image(img, WIDTH, HEIGHT);
-	if (!img)
-	return (NULL);
+	if (!img || !mlx_resize_image(img, WIDTH, HEIGHT))
+		return (NULL);
 	return (img);
 }
 
-void my_keyhook(mlx_key_data_t keydata, void *data)
+void my_keyhook(mlx_key_data_t keydata, void *mapdata)
 {
-	t_map_data *mdata;
+	t_map_data *data;
 
-	mdata = data;
-	if (keydata.key == MLX_KEY_LEFT && keydata.action == MLX_PRESS)
-		{
-			if (mdata->map[mdata->player->y][mdata->player->x - 1] != '1')
-			{
-			mdata->player->x = mdata->player->x - 1;
-			mdata->crab->instances->x = (mdata->player->x * WIDTH);
-			}
-		}
+	data = mapdata;
+	if (data->crab->enabled == false)
+	{
+		mlx_close_window(data->mlx);
+		return ;
+	}
+	else if (keydata.key == MLX_KEY_LEFT && keydata.action == MLX_PRESS)
+		move_left(data);
 	else if (keydata.key == MLX_KEY_UP && keydata.action == MLX_PRESS)
-		{
-			if (mdata->map[mdata->player->y - 1][mdata->player->x] != '1')
-			{
-			mdata->player->y = mdata->player->y - 1;
-			mdata->crab->instances->y = (mdata->player->y * WIDTH);
-			}
-		}
+		move_up(data);
 	else if (keydata.key == MLX_KEY_RIGHT && keydata.action == MLX_PRESS)
-		{
-			if (mdata->map[mdata->player->y][mdata->player->x + 1] != '1')
-			{
-			mdata->player->x = mdata->player->x + 1;
-			mdata->crab->instances->x = (mdata->player->x * HEIGHT);
-			}
-		}
+		move_right(data);
 	else if (keydata.key == MLX_KEY_DOWN && keydata.action == MLX_PRESS)
-		{
-			if (mdata->map[mdata->player->y + 1][mdata->player->x] != '1')
+		move_down(data);
+	else if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
+	{
+		mlx_close_window(data->mlx);
+		return ;
+	}
+}
+
+void	move_left(t_map_data *data)
+{
+	if (data->map[data->player->y][data->player->x - 1] != '1')
 			{
-			mdata->player->y = mdata->player->y + 1;
-			mdata->crab->instances->y = (mdata->player->y * HEIGHT);
+				data->player->x = data->player->x - 1;
+				data->crab->instances->x = (data->player->x * WIDTH);
+				if (data->id_map[data->player->y][data->player->x] >= 0)
+				{
+					data->shell->instances[data->id_map[data->player->y][data->player->x]].enabled = false;
+					data->collectibles--;
+				}
+				else if (data->map[data->player->y][data->player->x] == 'E' && data->collectibles == 0)
+				{
+					data->crab->enabled = false;
+				}
 			}
-		}
+}
+
+void	move_up(t_map_data *data)
+{
+	if (data->map[data->player->y - 1][data->player->x] != '1')
+			{
+				data->player->y = data->player->y - 1;
+				data->crab->instances->y = (data->player->y * WIDTH);
+				if (data->id_map[data->player->y][data->player->x] >= 0)
+				{
+					data->shell->instances[data->id_map[data->player->y][data->player->x]].enabled = false;
+					data->collectibles--;
+				}
+			}
+}
+
+void	move_right(t_map_data *data)
+{
+	if (data->map[data->player->y][data->player->x + 1] != '1')
+			{
+				data->player->x = data->player->x + 1;
+				data->crab->instances->x = (data->player->x * HEIGHT);
+				if (data->id_map[data->player->y][data->player->x] >= 0)
+				{
+					data->shell->instances[data->id_map[data->player->y][data->player->x]].enabled = false;
+					data->collectibles--;
+				}
+			}
+}
+
+void	move_down(t_map_data *data)
+{
+	if (data->map[data->player->y + 1][data->player->x] != '1')
+			{
+				data->player->y = data->player->y + 1;
+				data->crab->instances->y = (data->player->y * HEIGHT);
+				if (data->id_map[data->player->y][data->player->x] >= 0)
+				{
+					data->shell->instances[data->id_map[data->player->y][data->player->x]].enabled = false;
+					data->collectibles--;
+				}
+			}
 }
 
 char	**get_map(char **argv, char **map, t_map_data *data)
@@ -235,6 +290,48 @@ size_t	get_map_height(int fd, t_map_data *data)
 	return (size->y);
 }
 
+int	**get_id_map(t_map_data *data)
+{
+	int	i;
+
+	i = 0;
+	data->id_map = malloc(data->size->y * sizeof(int *));
+	if (!data->id_map)
+	{
+		// free stuff
+		return (NULL);
+	}
+	while (i < data->size->y)
+	{
+		data->id_map[i] = malloc(data->size->x * sizeof(int));
+		if (!data->id_map[i])
+		{
+			// free stuff
+			return (NULL);
+		}
+		i++;
+	}
+	fill_id_map(data);
+	return (data->id_map);
+}
+
+void	fill_id_map(t_map_data *data)
+{
+	int y = 0;
+	int x = 0;
+
+	while (y < data->size->y)
+	{
+		while (x < data->size->x)
+		{
+			data->id_map[y][x] = -1;
+			x++;
+		}
+		y++;
+		x = 0;
+	}
+}
+
 int	map_check(char **map, t_map_data *data)
 {
 	if (!component_check(map, data) || !shape_check(map, data) ||
@@ -282,15 +379,9 @@ int	symbol_check(char **map, t_map_data *data, char symbol)
 	if (count == -1)
 		return (0);
 	if ((symbol == 'P' || symbol == 'E') && (count != 1))
-	{
-		ft_printf("player or exit != 1");
 		return (0);
-	}
 	if (symbol == 'C' && count < 1)
-	{
-		ft_printf("no collectibles\n");
 		return (0);
-	}
 	if (symbol == 'C')
 		data->collectibles = count;
 	return (1);
@@ -311,9 +402,9 @@ int	count_symbols(char **map, t_map_data *data, char symbol)
 		{
 			if (map[y][x++] == symbol)
 			{
-				if (symbol == 'P' || symbol == 'E')
+				if (symbol == 'P')
 				{
-					if (!set_coordinates(data, symbol, y, x -1))
+					if (!set_coordinates(data, y, x -1))
 						return (-1);
 				}
 				count++;
@@ -416,7 +507,7 @@ void	fill_map(char **map, t_point curr)
 	fill_map(map, (t_point){curr.y, curr.x + 1});
 }
 
-int	set_coordinates(t_map_data *data, char symbol, int y, int x)
+int	set_coordinates(t_map_data *data, int y, int x)
 {
 	t_point *coordinates;
 
@@ -425,18 +516,15 @@ int	set_coordinates(t_map_data *data, char symbol, int y, int x)
 		return (0);
 	coordinates->y = y;
 	coordinates->x = x;
-	if (symbol == 'P')
-		data->player = coordinates;
-	else if (symbol == 'E')
-		data->exit = coordinates;
+	data->player = coordinates;
 	return (1);
 }
 
 int	free_data(t_map_data *data)
 {
+	free_arr(data->map, data->size->y);
 	free(data->size);
 	free(data->player);
-	free(data->exit);
 	free(data);
 	return (0);
 }
