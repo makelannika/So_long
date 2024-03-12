@@ -41,18 +41,22 @@ void	move_left(t_map_data *data, int y, int x)
 {
 	if (data->map[y][x - 1] != '1')
 	{
-		data->player->x -= 1;
-		data->crab->instances->x = (data->player->x * WIDTH);
-		data->moves += 1;
-		ft_printf("Moves: %d\n", data->moves);
-		if (data->id_map[y][x - 1] >= 0)
+		if ((data->map[y][x - 1] != 'E')
+			|| (data->map[y][x - 1] == 'E' && data->collectibles == 0))
 		{
-			data->shell->instances[data->id_map[y][x - 1]].enabled = false;
-			data->id_map[y][x - 1] = -1;
-			data->collectibles--;
+			data->player->x -= 1;
+			data->crab->instances->x = (data->player->x * WIDTH);
+			data->moves += 1;
+			ft_printf("Moves: %d\n", data->moves);
+			if (data->id_map[y][x - 1] >= 0)
+			{
+				data->shell->instances[data->id_map[y][x - 1]].enabled = false;
+				data->id_map[y][x - 1] = -1;
+				data->collectibles--;
+			}
+			else if (data->map[y][x - 1] == 'E' && data->collectibles == 0)
+				data->crab->enabled = false;
 		}
-		else if (data->map[y][x - 1] == 'E' && data->collectibles == 0)
-			data->crab->enabled = false;
 	}
 }
 
@@ -60,18 +64,22 @@ void	move_up(t_map_data *data, int y, int x)
 {
 	if (data->map[y - 1][x] != '1')
 	{
-		data->player->y -= 1;
-		data->crab->instances->y = (data->player->y * WIDTH);
-		data->moves += 1;
-		ft_printf("Moves: %d\n", data->moves);
-		if (data->id_map[y - 1][x] >= 0)
+		if ((data->map[y - 1][x] != 'E')
+			|| (data->map[y - 1][x] == 'E' && data->collectibles == 0))
 		{
-			data->shell->instances[data->id_map[y - 1][x]].enabled = false;
-			data->id_map[y - 1][x] = -1;
-			data->collectibles--;
+			data->player->y -= 1;
+			data->crab->instances->y = (data->player->y * WIDTH);
+			data->moves += 1;
+			ft_printf("Moves: %d\n", data->moves);
+			if (data->id_map[y - 1][x] >= 0)
+			{
+				data->shell->instances[data->id_map[y - 1][x]].enabled = false;
+				data->id_map[y - 1][x] = -1;
+				data->collectibles--;
+			}
+			else if (data->map[y - 1][x] == 'E' && data->collectibles == 0)
+				data->crab->enabled = false;
 		}
-		else if (data->map[y - 1][x] == 'E' && data->collectibles == 0)
-			data->crab->enabled = false;
 	}
 }
 
@@ -79,18 +87,22 @@ void	move_right(t_map_data *data, int y, int x)
 {
 	if (data->map[y][x + 1] != '1')
 	{
-		data->player->x += 1;
-		data->crab->instances->x = (data->player->x * HEIGHT);
-		data->moves += 1;
-		ft_printf("Moves: %d\n", data->moves);
-		if (data->id_map[y][x + 1] >= 0)
+		if ((data->map[y][x + 1] != 'E')
+			|| (data->map[y][x + 1] == 'E' && data->collectibles == 0))
 		{
-			data->shell->instances[data->id_map[y][x + 1]].enabled = false;
-			data->id_map[y][x + 1] = -1;
-			data->collectibles--;
+			data->player->x += 1;
+			data->crab->instances->x = (data->player->x * HEIGHT);
+			data->moves += 1;
+			ft_printf("Moves: %d\n", data->moves);
+			if (data->id_map[y][x + 1] >= 0)
+			{
+				data->shell->instances[data->id_map[y][x + 1]].enabled = false;
+				data->id_map[y][x + 1] = -1;
+				data->collectibles--;
+			}
+			else if (data->map[y][x + 1] == 'E' && data->collectibles == 0)
+				data->crab->enabled = false;
 		}
-		else if (data->map[y][x + 1] == 'E' && data->collectibles == 0)
-			data->crab->enabled = false;
 	}
 }
 
@@ -98,17 +110,21 @@ void	move_down(t_map_data *data, int y, int x)
 {
 	if (data->map[y + 1][x] != '1')
 	{
-		data->player->y += 1;
-		data->crab->instances->y = (data->player->y * HEIGHT);
-		data->moves += 1;
-		ft_printf("Moves: %d\n", data->moves);
-		if (data->id_map[y + 1][x] >= 0)
+		if ((data->map[y + 1][x] != 'E')
+			|| (data->map[y + 1][x] == 'E' && data->collectibles == 0))
 		{
-			data->shell->instances[data->id_map[y + 1][x]].enabled = false;
-			data->id_map[y + 1][x] = -1;
-			data->collectibles--;
+			data->player->y += 1;
+			data->crab->instances->y = (data->player->y * HEIGHT);
+			data->moves += 1;
+			ft_printf("Moves: %d\n", data->moves);
+			if (data->id_map[y + 1][x] >= 0)
+			{
+				data->shell->instances[data->id_map[y + 1][x]].enabled = false;
+				data->id_map[y + 1][x] = -1;
+				data->collectibles--;
+			}
+			else if (data->map[y + 1][x] == 'E' && data->collectibles == 0)
+				data->crab->enabled = false;
 		}
-		else if (data->map[y + 1][x] == 'E' && data->collectibles == 0)
-			data->crab->enabled = false;
 	}
 }

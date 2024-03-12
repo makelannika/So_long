@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   maps_utils.c                                       :+:      :+:    :+:   */
+/*   map_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amakela <amakela@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/10 18:26:12 by amakela           #+#    #+#             */
-/*   Updated: 2024/03/10 18:26:14 by amakela          ###   ########.fr       */
+/*   Created: 2024/03/12 20:53:13 by amakela           #+#    #+#             */
+/*   Updated: 2024/03/12 20:53:17 by amakela          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@ char	**get_map(char **argv, t_map_data *data)
 
 	i = 0;
 	fd = open(argv[1], O_RDONLY);
+	if (read(fd, 0, 0) < 0)
+	{
+		free(data);
+		return (NULL);
+	}
 	get_map_height(fd, data);
 	close(fd);
 	if (data->size->y == 0)
@@ -33,6 +38,7 @@ char	**get_map(char **argv, t_map_data *data)
 	}
 	fd = open(argv[1], O_RDONLY);
 	copy_map(data, fd);
+	close(fd);
 	return (data->map);
 }
 
@@ -42,7 +48,10 @@ void	get_map_height(int fd, t_map_data *data)
 
 	data->size = ft_calloc(1, sizeof(t_point));
 	if (!data->size)
+	{
+		free(data);
 		return ;
+	}
 	line = get_next_line(fd);
 	while (line)
 	{

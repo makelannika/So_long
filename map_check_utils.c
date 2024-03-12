@@ -1,16 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   symbols_utils.c                                    :+:      :+:    :+:   */
+/*   map_check_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amakela <amakela@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/10 20:27:13 by amakela           #+#    #+#             */
-/*   Updated: 2024/03/10 20:27:17 by amakela          ###   ########.fr       */
+/*   Created: 2024/03/12 20:53:35 by amakela           #+#    #+#             */
+/*   Updated: 2024/03/12 20:53:38 by amakela          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+
+int	map_check(t_map_data *data)
+{
+	if (!component_check(data) || !shape_check(data)
+		|| !path_check(data->player, data))
+	{
+		free_arr(data->map, data->size->y);
+		free(data->player);
+		free(data->size);
+		free(data);
+		return (0);
+	}
+	return (1);
+}
 
 int	component_check(t_map_data *data)
 {

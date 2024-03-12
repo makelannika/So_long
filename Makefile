@@ -22,8 +22,8 @@ LIBS		= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -L"/Users/$(USER)/.brew/opt/glfw/
 CFLAGS		= -Wall -Wextra -Werror -Wunreachable-code -Ofast
 CC			= cc
 
-CFILES		= maps_utils.c		layout_utils.c		symbols_utils.c		\
-			graphics_utils.c	movement_utils.c	cleaning_utils.c	\
+CFILES		= map_utils.c		map_check_utils.c		layout_check_utils.c		\
+			graphics_utils.c	movement_utils.c		cleaning_utils.c			\
 			so_long.c
 
 OFILES		= $(CFILES:.c=.o)

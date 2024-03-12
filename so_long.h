@@ -60,6 +60,7 @@ int			symbol_check(t_map_data *data, char symbol);
 int			count_symbols(char **map, t_map_data *data, char symbol);
 int			set_coordinates(t_map_data *data, int y, int x);
 int			path_check(t_point *player, t_map_data *data);
+char		**get_copy(char **copy, t_map_data *data);
 void		fill_map(char **map, t_point curr);
 int			so_long(t_map_data *data);
 int			free_data(t_map_data *data);
