@@ -18,8 +18,8 @@
 # include "MLX42/include/MLX42/MLX42.h"
 # include "libft/libft.h"
 
-# define HEIGHT 100
-# define WIDTH 100
+# define HEIGHT 90
+# define WIDTH 90
 
 typedef struct s_point
 {
@@ -48,8 +48,9 @@ typedef struct s_map_data
 	int				moves;
 }	t_map_data;
 
+int			check_extension(char *arg);
 char		**get_map(char **argv, t_map_data *data);
-void		get_map_height(int fd, t_map_data *data);
+void		get_map_height(int fd, t_map_data *data, int *flag);
 int			**get_id_map(t_map_data *data);
 void		fill_id_map(t_map_data *data);
 int			map_check(t_map_data *data);
@@ -76,6 +77,6 @@ void		move_right(t_map_data *mdata, int y, int x);
 void		move_down(t_map_data *mdata, int y, int x);
 void		delete_textures(t_map_data *data);
 void		free_id_map(int	**id_map, int j);
-void		copy_map(t_map_data *data, int fd);
+void		copy_map(t_map_data *data, int fd, int *flag);
 
 #endif

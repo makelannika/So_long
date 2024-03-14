@@ -14,11 +14,11 @@
 
 int	get_textures(t_map_data *data)
 {
-	data->sand_t = mlx_load_png("./sand.png");
-	data->plant_t = mlx_load_png("./plant.png");
-	data->shell_t = mlx_load_png("./shell.png");
-	data->crab_t = mlx_load_png("./crab.png");
-	data->hole_t = mlx_load_png("./exit.png");
+	data->sand_t = mlx_load_png("./textures/sand.png");
+	data->plant_t = mlx_load_png("./textures/plant.png");
+	data->shell_t = mlx_load_png("./textures/shell.png");
+	data->crab_t = mlx_load_png("./textures/crab.png");
+	data->hole_t = mlx_load_png("./textures/exit.png");
 	if (!data->sand_t || !data->plant_t || !data->shell_t
 		|| !data->crab_t || !data->hole_t)
 		return (0);

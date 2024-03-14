@@ -48,7 +48,7 @@ void	move_left(t_map_data *data, int y, int x)
 			data->crab->instances->x = (data->player->x * WIDTH);
 			data->moves += 1;
 			ft_printf("Moves: %d\n", data->moves);
-			if (data->id_map[y][x - 1] >= 0)
+			if (data->id_map[y][x - 1] > -1)
 			{
 				data->shell->instances[data->id_map[y][x - 1]].enabled = false;
 				data->id_map[y][x - 1] = -1;
@@ -71,7 +71,7 @@ void	move_up(t_map_data *data, int y, int x)
 			data->crab->instances->y = (data->player->y * WIDTH);
 			data->moves += 1;
 			ft_printf("Moves: %d\n", data->moves);
-			if (data->id_map[y - 1][x] >= 0)
+			if (data->id_map[y - 1][x] > -1)
 			{
 				data->shell->instances[data->id_map[y - 1][x]].enabled = false;
 				data->id_map[y - 1][x] = -1;
@@ -94,7 +94,7 @@ void	move_right(t_map_data *data, int y, int x)
 			data->crab->instances->x = (data->player->x * HEIGHT);
 			data->moves += 1;
 			ft_printf("Moves: %d\n", data->moves);
-			if (data->id_map[y][x + 1] >= 0)
+			if (data->id_map[y][x + 1] > -1)
 			{
 				data->shell->instances[data->id_map[y][x + 1]].enabled = false;
 				data->id_map[y][x + 1] = -1;
@@ -117,7 +117,7 @@ void	move_down(t_map_data *data, int y, int x)
 			data->crab->instances->y = (data->player->y * HEIGHT);
 			data->moves += 1;
 			ft_printf("Moves: %d\n", data->moves);
-			if (data->id_map[y + 1][x] >= 0)
+			if (data->id_map[y + 1][x] > -1)
 			{
 				data->shell->instances[data->id_map[y + 1][x]].enabled = false;
 				data->id_map[y + 1][x] = -1;

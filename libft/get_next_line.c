@@ -12,12 +12,12 @@
 
 #include "libft.h"
 
-ssize_t	read_file(int fd, char **text_read, ssize_t bytes_read);
-char	*next_line(char **text_read, ssize_t bytes_read, char *line);
+ssize_t	read_file(int fd, char **text_read, ssize_t bytes_read, int *flag);
+char	*next_line(char **text_read, ssize_t bytes_read, char *line, int *flag);
 int		find_nl(const char *s);
-void	freeptr(char **ptr);
+char	*fail(int *flag);
 
-char	*get_next_line(int fd)
+char	*get_next_line(int fd, int *flag)
 {
 	char		*line;
 	ssize_t		bytes_read;
@@ -30,22 +30,22 @@ char	*get_next_line(int fd)
 	if (!text_read[fd])
 		text_read[fd] = (char *)ft_calloc(1, 1);
 	if (!text_read[fd])
-		return (NULL);
+		return (fail(flag));
 	if (read(fd, 0, 0) < 0)
 	{
-		freeptr(&text_read[fd]);
-		return (NULL);
+		free_ptr(&text_read[fd]);
+		return (fail(flag));
 	}
-	bytes_read = read_file(fd, &text_read[fd], bytes_read);
+	bytes_read = read_file(fd, &text_read[fd], bytes_read, flag);
 	if (bytes_read == -1)
 		return (NULL);
-	line = next_line(&text_read[fd], bytes_read, line);
+	line = next_line(&text_read[fd], bytes_read, line, flag);
 	if (!line || bytes_read == 0)
-		freeptr(&text_read[fd]);
+		free_ptr(&text_read[fd]);
 	return (line);
 }
 
-ssize_t	read_file(int fd, char **text_read, ssize_t bytes_read)
+ssize_t	read_file(int fd, char **text_read, ssize_t bytes_read, int *flag)
 {
 	char	*temp;
 	char	buffer[BUFFER_SIZE + 1];
@@ -58,19 +58,21 @@ ssize_t	read_file(int fd, char **text_read, ssize_t bytes_read)
 		buffer[bytes_read] = '\0';
 		temp = *text_read;
 		*text_read = ft_strjoin(*text_read, buffer);
-		freeptr(&temp);
+		free_ptr(&temp);
 		if (!*text_read)
+		{
+			*flag = -1;
 			return (-1);
+		}
 	}
-	if ((bytes_read == -1) || (bytes_read == 0 && **text_read == '\0'))
-	{
-		freeptr(text_read);
-		return (-1);
-	}
+	if (bytes_read == -1)
+		*flag = -1;
+	if (*flag == -1 || (bytes_read == 0 && **text_read == '\0'))
+		return (free_ptr(text_read));
 	return (bytes_read);
 }
 
-char	*next_line(char **text_read, ssize_t bytes_read, char *line)
+char	*next_line(char **text_read, ssize_t bytes_read, char *line, int *flag)
 {
 	int		i;
 	char	*temp;
@@ -82,16 +84,16 @@ char	*next_line(char **text_read, ssize_t bytes_read, char *line)
 		i++;
 	line = ft_substr(*text_read, 0, i);
 	if (!line)
-		return (NULL);
+		return (fail(flag));
 	if (bytes_read == 0)
 		return (line);
 	temp = *text_read;
 	*text_read = ft_substr(*text_read, i, ft_strlen(*text_read) - i);
-	freeptr(&temp);
+	free_ptr(&temp);
 	if (!*text_read)
 	{
-		freeptr(&line);
-		return (NULL);
+		free_ptr(&line);
+		return (fail(flag));
 	}
 	return (line);
 }
@@ -109,8 +111,8 @@ int	find_nl(const char *s)
 	return (0);
 }
 
-void	freeptr(char **ptr)
+char	*fail(int *flag)
 {
-	free(*ptr);
-	*ptr = NULL;
+	*flag = -1;
+	return (NULL);
 }

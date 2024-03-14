@@ -16,8 +16,11 @@ int	main(int argc, char **argv)
 {
 	t_map_data		*data;
 
-	if (argc != 2)
+	if (argc != 2 || check_extension(argv[1]) != 0)
+	{
+		ft_printf("Error\nEnter a .ber file\n");
 		return (0);
+	}
 	data = ft_calloc(1, sizeof(t_map_data));
 	if (!data || !get_map(argv, data) || !map_check(data) || !get_id_map(data))
 		return (0);
@@ -27,6 +30,14 @@ int	main(int argc, char **argv)
 	return (0);
 }
 
+int	check_extension(char *arg)
+{
+	int	len;
+
+	len = ft_strlen(arg);
+	return (ft_strncmp(&arg[len - 4], ".ber", 4));
+}
+
 int	so_long(t_map_data *data)
 {
 	mlx_set_setting(MLX_STRETCH_IMAGE, true);
@@ -34,11 +45,9 @@ int	so_long(t_map_data *data)
 			HEIGHT * data->size->y, "So_long", true);
 	if (!data->mlx)
 		return (0);
-	if (!get_textures(data))
-		return (0);
-	if (mlx_image_to_window(data->mlx, data->sand, 0, 0 < 0))
-		return (0);
-	if (!draw_map(data))
+	if (!get_textures(data)
+		|| mlx_image_to_window(data->mlx, data->sand, 0, 0 < 0)
+		|| !draw_map(data))
 		return (0);
 	mlx_key_hook(data->mlx, &my_keyhook, data);
 	mlx_loop(data->mlx);
