@@ -19,7 +19,7 @@ LIBMLX		= MLX42
 HEADERS 	= -I $(LIBMLX)/include
 LIBS		= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -L"/Users/$(USER)/.brew/opt/glfw/lib/" -pthread -lm
 
-CFLAGS		= -Wall -Wextra -Werror -Wunreachable-code -Ofast
+CFLAGS		= -Wall -Wextra -Werror -Wunreachable-code -Ofast -g3
 CC			= cc
 
 CFILES		= map_utils.c		map_check_utils.c		layout_check_utils.c		\
@@ -34,7 +34,7 @@ libmlx:
 	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@ $(HEADERS) && printf "Compiling: $(notdir $<)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(HEADERS)
 
 $(NAME): $(OFILES)
 	make -C $(LIBFTDIR)
@@ -47,7 +47,7 @@ clean:
 fclean: clean
 	rm -f $(NAME)
 	make -C $(LIBFTDIR) fclean
-	rm -f $(LIBMLX)/build/libmlx42.a
+	rm -rf $(LIBMLX)/build
 
 re: fclean all
 

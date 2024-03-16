@@ -19,16 +19,14 @@ int	get_textures(t_map_data *data)
 	data->shell_t = mlx_load_png("./textures/shell.png");
 	data->crab_t = mlx_load_png("./textures/crab.png");
 	data->hole_t = mlx_load_png("./textures/exit.png");
-	if (!data->sand_t || !data->plant_t || !data->shell_t
-		|| !data->crab_t || !data->hole_t)
+	if (mlx_errno)
 		return (0);
 	data->sand = get_background(data, data->sand_t);
 	data->plant = get_image(data, data->plant_t);
 	data->shell = get_image(data, data->shell_t);
 	data->crab = get_image(data, data->crab_t);
 	data->hole = get_image(data, data->hole_t);
-	if (!data->sand || !data->plant || !data->shell
-		|| !data->crab || !data->hole)
+	if (mlx_errno)
 		return (0);
 	return (1);
 }
@@ -38,8 +36,8 @@ mlx_image_t	*get_background(t_map_data *data, mlx_texture_t *texture)
 	mlx_image_t	*img;
 
 	img = mlx_texture_to_image(data->mlx, texture);
-	if (!img || !mlx_resize_image(img, WIDTH * data->size->x,
-			HEIGHT * data->size->y))
+	if (!img || !mlx_resize_image(img, WIDTH * data->size.x,
+			HEIGHT * data->size.y))
 		return (NULL);
 	return (img);
 }
@@ -64,6 +62,7 @@ int	draw_map(t_map_data *data)
 		if (!draw_row(data, y))
 			return (0);
 	}
+	data->hole->enabled = false;
 	return (1);
 }
 

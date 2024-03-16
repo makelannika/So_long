@@ -12,10 +12,10 @@
 
 #include "libft.h"
 
-ssize_t	read_file(int fd, char **text_read, ssize_t bytes_read, int *flag);
-char	*next_line(char **text_read, ssize_t bytes_read, char *line, int *flag);
-int		find_nl(const char *s);
-char	*fail(int *flag);
+static ssize_t	read_file(int fd, char **text_read, ssize_t bytes_read, int *flag);
+static char		*next_line(char **text_read, ssize_t bytes_read, char *line, int *flag);
+static int		find_nl(const char *s);
+static char		*fail(int *flag);
 
 char	*get_next_line(int fd, int *flag)
 {
@@ -45,7 +45,7 @@ char	*get_next_line(int fd, int *flag)
 	return (line);
 }
 
-ssize_t	read_file(int fd, char **text_read, ssize_t bytes_read, int *flag)
+static ssize_t	read_file(int fd, char **text_read, ssize_t bytes_read, int *flag)
 {
 	char	*temp;
 	char	buffer[BUFFER_SIZE + 1];
@@ -61,18 +61,18 @@ ssize_t	read_file(int fd, char **text_read, ssize_t bytes_read, int *flag)
 		free_ptr(&temp);
 		if (!*text_read)
 		{
-			*flag = -1;
+			*flag = 1;
 			return (-1);
 		}
 	}
 	if (bytes_read == -1)
-		*flag = -1;
-	if (*flag == -1 || (bytes_read == 0 && **text_read == '\0'))
+		*flag = 1;
+	if (*flag || (bytes_read == 0 && **text_read == '\0'))
 		return (free_ptr(text_read));
 	return (bytes_read);
 }
 
-char	*next_line(char **text_read, ssize_t bytes_read, char *line, int *flag)
+static char	*next_line(char **text_read, ssize_t bytes_read, char *line, int *flag)
 {
 	int		i;
 	char	*temp;
@@ -98,7 +98,7 @@ char	*next_line(char **text_read, ssize_t bytes_read, char *line, int *flag)
 	return (line);
 }
 
-int	find_nl(const char *s)
+static int	find_nl(const char *s)
 {
 	size_t	i;
 
@@ -111,8 +111,8 @@ int	find_nl(const char *s)
 	return (0);
 }
 
-char	*fail(int *flag)
+static char	*fail(int *flag)
 {
-	*flag = -1;
+	*flag = 1;
 	return (NULL);
 }
