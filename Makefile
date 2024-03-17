@@ -18,7 +18,7 @@ LIBFT		= libft.a
 MLX42		= MLX42
 LIBMLX42	= $(MLX42)/build/libmlx42.a
 HEADERS 	= -I $(MLX42)/include
-LIBS		= $(MLX42)/build/libmlx42.a -ldl -lglfw -L"/Users/$(USER)/.brew/opt/glfw/lib/" -pthread -lm
+LIBS		= $(LIBFTDIR)/$(LIBFT) $(LIBMLX42) -lglfw -L"/Users/$(USER)/.brew/opt/glfw/lib/"
 
 CFLAGS		= -Wall -Wextra -Werror
 CC			= cc
@@ -36,7 +36,7 @@ $(LIBMLX42):
 
 $(NAME): $(OFILES)
 	make -C $(LIBFTDIR)
-	$(CC) $(OFILES) $(LIBFTDIR)/$(LIBFT) $(LIBS) $(HEADERS) -o $(NAME)
+	$(CC) $(OFILES) $(LIBS) $(HEADERS) -o $(NAME)
 
 clean:
 	rm -f $(OFILES)
