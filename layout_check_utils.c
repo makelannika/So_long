@@ -12,6 +12,10 @@
 
 #include "so_long.h"
 
+static int	wall_check(t_map_data *data);
+static char	**get_copy(char **copy, t_map_data *data);
+static void	fill_map(char **map, t_point curr);
+
 int	shape_check(t_map_data *data)
 {
 	int	y;
@@ -41,7 +45,7 @@ int	shape_check(t_map_data *data)
 	return (1);
 }
 
-int	wall_check(t_map_data *data)
+static int	wall_check(t_map_data *data)
 {
 	int	x;
 	int	y;
@@ -88,7 +92,7 @@ int	path_check(t_point player, t_map_data *data)
 	return (1);
 }
 
-char	**get_copy(char **copy, t_map_data *data)
+static char	**get_copy(char **copy, t_map_data *data)
 {
 	int	i;
 
@@ -106,7 +110,7 @@ char	**get_copy(char **copy, t_map_data *data)
 	return (copy);
 }
 
-void	fill_map(char **map, t_point curr)
+static void	fill_map(char **map, t_point curr)
 {
 	if (map[curr.y][curr.x] == '1')
 		return ;

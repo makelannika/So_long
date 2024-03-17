@@ -12,6 +12,10 @@
 
 #include "so_long.h"
 
+static mlx_image_t	*get_background(t_map_data *data, mlx_texture_t *texture);
+static mlx_image_t	*get_image(t_map_data *data, mlx_texture_t *texture);
+static int			draw_row(t_map_data *data, int y);
+
 int	get_textures(t_map_data *data)
 {
 	data->sand_t = mlx_load_png("./textures/sand.png");
@@ -31,7 +35,7 @@ int	get_textures(t_map_data *data)
 	return (1);
 }
 
-mlx_image_t	*get_background(t_map_data *data, mlx_texture_t *texture)
+static mlx_image_t	*get_background(t_map_data *data, mlx_texture_t *texture)
 {
 	mlx_image_t	*img;
 
@@ -42,7 +46,7 @@ mlx_image_t	*get_background(t_map_data *data, mlx_texture_t *texture)
 	return (img);
 }
 
-mlx_image_t	*get_image(t_map_data *data, mlx_texture_t *texture)
+static mlx_image_t	*get_image(t_map_data *data, mlx_texture_t *texture)
 {
 	mlx_image_t	*img;
 
@@ -66,7 +70,7 @@ int	draw_map(t_map_data *data)
 	return (1);
 }
 
-int	draw_row(t_map_data *data, int y)
+static int	draw_row(t_map_data *data, int y)
 {
 	int	x;
 	int	idx;

@@ -1,16 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   so_long.c                                          :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amakela <amakela@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/22 18:22:06 by amakela           #+#    #+#             */
-/*   Updated: 2024/02/22 18:22:34 by amakela          ###   ########.fr       */
+/*   Created: 2024/03/17 19:48:47 by amakela           #+#    #+#             */
+/*   Updated: 2024/03/17 19:48:50 by amakela          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+
+static int	check_extension(char *arg);
+static int	game(t_map_data *data);
 
 int	main(int argc, char **argv)
 {
@@ -23,13 +26,13 @@ int	main(int argc, char **argv)
 	}
 	if (!get_map(argv, &data) || !map_check(&data) || !get_id_map(&data))
 		return (0);
-	so_long(&data);
+	game(&data);
 	free_id_map((&data)->id_map, (&data)->size.y);
 	free_arr((&data)->map, (&data)->size.y);
 	return (0);
 }
 
-int	check_extension(char *arg)
+static int	check_extension(char *arg)
 {
 	int	len;
 
@@ -37,7 +40,7 @@ int	check_extension(char *arg)
 	return (ft_strncmp(&arg[len - 4], ".ber", 4));
 }
 
-int	so_long(t_map_data *data)
+static int	game(t_map_data *data)
 {
 	mlx_set_setting(MLX_STRETCH_IMAGE, true);
 	data->mlx = mlx_init(WIDTH * data->size.x,
@@ -49,6 +52,7 @@ int	so_long(t_map_data *data)
 		|| !draw_map(data))
 	{
 		delete_textures(data);
+		mlx_terminate(data->mlx);
 		return (0);
 	}
 	mlx_key_hook(data->mlx, &movement, data);

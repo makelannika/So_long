@@ -12,6 +12,8 @@
 
 #include "so_long.h"
 
+static int	component_check(t_map_data *data);
+
 int	map_check(t_map_data *data)
 {
 	if (!component_check(data)
@@ -24,7 +26,7 @@ int	map_check(t_map_data *data)
 	return (1);
 }
 
-int	component_check(t_map_data *data)
+static int	component_check(t_map_data *data)
 {
 	int	y;
 	int	x;

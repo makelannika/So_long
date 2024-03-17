@@ -12,6 +12,11 @@
 
 #include "so_long.h"
 
+static void	move_left(t_map_data *data, int y, int x);
+static void	move_up(t_map_data *data, int y, int x);
+static void	move_right(t_map_data *data, int y, int x);
+static void	move_down(t_map_data *data, int y, int x);
+
 void	movement(mlx_key_data_t keydata, void *mapdata)
 {
 	t_map_data	*data;
@@ -29,7 +34,7 @@ void	movement(mlx_key_data_t keydata, void *mapdata)
 		mlx_close_window(data->mlx);
 }
 
-void	move_left(t_map_data *data, int y, int x)
+static void	move_left(t_map_data *data, int y, int x)
 {
 	if (data->map[y][x - 1] != '1')
 	{
@@ -56,7 +61,7 @@ void	move_left(t_map_data *data, int y, int x)
 	}
 }
 
-void	move_up(t_map_data *data, int y, int x)
+static void	move_up(t_map_data *data, int y, int x)
 {
 	if (data->map[y - 1][x] != '1')
 	{
@@ -83,7 +88,7 @@ void	move_up(t_map_data *data, int y, int x)
 	}
 }
 
-void	move_right(t_map_data *data, int y, int x)
+static void	move_right(t_map_data *data, int y, int x)
 {
 	if (data->map[y][x + 1] != '1')
 	{
@@ -110,7 +115,7 @@ void	move_right(t_map_data *data, int y, int x)
 	}
 }
 
-void	move_down(t_map_data *data, int y, int x)
+static void	move_down(t_map_data *data, int y, int x)
 {
 	if (data->map[y + 1][x] != '1')
 	{

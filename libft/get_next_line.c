@@ -33,6 +33,7 @@ char	*get_next_line(int fd, int *flag)
 		return (fail(flag));
 	if (read(fd, 0, 0) < 0)
 	{
+		ft_printf("Error\nUnable to read the file\n");
 		free_ptr(&text_read[fd]);
 		return (fail(flag));
 	}

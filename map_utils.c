@@ -13,6 +13,10 @@
 #include "so_long.h"
 #include <fcntl.h>
 
+static void	get_map_height(int fd, t_map_data *data, int *flag);
+static void	copy_map(t_map_data *data, int fd, int *flag);
+static void	fill_id_map(t_map_data *data);
+
 char	**get_map(char **argv, t_map_data *data)
 {
 	int		i;
@@ -33,15 +37,10 @@ char	**get_map(char **argv, t_map_data *data)
 	return (data->map);
 }
 
-void	get_map_height(int fd, t_map_data *data, int *flag)
+static void	get_map_height(int fd, t_map_data *data, int *flag)
 {
 	char	*line;
 
-	if (read(fd, 0, 0) < 0)
-	{
-		ft_printf("Error\nUnable to read the file\n");
-		return ;
-	}
 	data->size.y = 0;
 	line = get_next_line(fd, flag);
 	while (line && !*flag)
@@ -57,7 +56,7 @@ void	get_map_height(int fd, t_map_data *data, int *flag)
 		ft_printf("Error\nEmpty map\n");
 }
 
-void	copy_map(t_map_data *data, int fd, int *flag)
+static void	copy_map(t_map_data *data, int fd, int *flag)
 {
 	int	i;
 
@@ -102,7 +101,7 @@ int	**get_id_map(t_map_data *data)
 	return (data->id_map);
 }
 
-void	fill_id_map(t_map_data *data)
+static void	fill_id_map(t_map_data *data)
 {
 	int	y;
 	int	x;
