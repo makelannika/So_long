@@ -15,11 +15,12 @@ NAME		= so_long
 LIBFTDIR	= libft
 LIBFT		= libft.a
 
-LIBMLX		= MLX42
-HEADERS 	= -I $(LIBMLX)/include
-LIBS		= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -L"/Users/$(USER)/.brew/opt/glfw/lib/" -pthread -lm
+MLX42		= MLX42
+LIBMLX42	= $(MLX42)/build/libmlx42.a
+HEADERS 	= -I $(MLX42)/include
+LIBS		= $(MLX42)/build/libmlx42.a -ldl -lglfw -L"/Users/$(USER)/.brew/opt/glfw/lib/" -pthread -lm
 
-CFLAGS		= -Wall -Wextra -Werror -Wunreachable-code -Ofast -g3
+CFLAGS		= -Wall -Wextra -Werror
 CC			= cc
 
 CFILES		= map_utils.c		map_check_utils.c		layout_check_utils.c		\
@@ -28,13 +29,10 @@ CFILES		= map_utils.c		map_check_utils.c		layout_check_utils.c		\
 
 OFILES		= $(CFILES:.c=.o)
 
-all: libmlx $(NAME)
+all: $(LIBMLX42) $(NAME)
 
-libmlx:
-	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
-
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@ $(HEADERS)
+$(LIBMLX42):
+	@cmake $(MLX42) -B $(MLX42)/build && make -C $(MLX42)/build -j4
 
 $(NAME): $(OFILES)
 	make -C $(LIBFTDIR)
@@ -47,7 +45,7 @@ clean:
 fclean: clean
 	rm -f $(NAME)
 	make -C $(LIBFTDIR) fclean
-	rm -rf $(LIBMLX)/build
+	rm -rf $(MLX42)/build
 
 re: fclean all
 
