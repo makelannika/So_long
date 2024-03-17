@@ -54,7 +54,7 @@ void	get_map_height(int fd, t_map_data *data, int *flag)
 		free(line);
 	close(fd);
 	if (data->size.y == 0 && !*flag)
-			ft_printf("Error\nEmpty map\n");
+		ft_printf("Error\nEmpty map\n");
 }
 
 void	copy_map(t_map_data *data, int fd, int *flag)
