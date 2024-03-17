@@ -53,6 +53,8 @@ int	so_long(t_map_data *data)
 	}
 	mlx_key_hook(data->mlx, &movement, data);
 	mlx_loop(data->mlx);
+	if (data->crab->enabled == true)
+		ft_printf("You exited the game\n");
 	delete_textures(data);
 	mlx_terminate(data->mlx);
 	return (1);

@@ -26,10 +26,7 @@ void	movement(mlx_key_data_t keydata, void *mapdata)
 	else if (keydata.key == MLX_KEY_DOWN && keydata.action == MLX_PRESS)
 		move_down(data, data->player.y, data->player.x);
 	else if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
-	{
-		ft_printf("You exited the game\n");
 		mlx_close_window(data->mlx);
-	}
 }
 
 void	move_left(t_map_data *data, int y, int x)
@@ -51,6 +48,7 @@ void	move_left(t_map_data *data, int y, int x)
 			}
 			else if (data->map[y][x - 1] == 'E' && data->hole->enabled == true)
 			{
+				data->crab->enabled = false;
 				ft_printf("You won!\n");
 				mlx_close_window(data->mlx);
 			}
@@ -77,6 +75,7 @@ void	move_up(t_map_data *data, int y, int x)
 			}
 			else if (data->map[y - 1][x] == 'E' && data->hole->enabled == true)
 			{
+				data->crab->enabled = false;
 				ft_printf("You won!\n");
 				mlx_close_window(data->mlx);
 			}
@@ -103,6 +102,7 @@ void	move_right(t_map_data *data, int y, int x)
 			}
 			else if (data->map[y][x + 1] == 'E' && data->hole->enabled == true)
 			{
+				data->crab->enabled = false;
 				ft_printf("You won!\n");
 				mlx_close_window(data->mlx);
 			}
@@ -129,6 +129,7 @@ void	move_down(t_map_data *data, int y, int x)
 			}
 			else if (data->map[y + 1][x] == 'E' && data->hole->enabled == true)
 			{
+				data->crab->enabled = false;
 				ft_printf("You won!\n");
 				mlx_close_window(data->mlx);
 			}
