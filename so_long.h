@@ -34,16 +34,16 @@ typedef struct s_map_data
 	char			**map;
 	int				**id_map;
 	mlx_t			*mlx;
-	mlx_texture_t	*sand_t;
-	mlx_texture_t	*plant_t;
-	mlx_texture_t	*shell_t;
-	mlx_texture_t	*crab_t;
-	mlx_texture_t	*hole_t;
-	mlx_image_t		*sand;
-	mlx_image_t		*plant;
-	mlx_image_t		*shell;
-	mlx_image_t		*crab;
-	mlx_image_t		*hole;
+	mlx_texture_t	*background_txtr;
+	mlx_texture_t	*wall_txtr;
+	mlx_texture_t	*collectible_txtr;
+	mlx_texture_t	*player_txtr;
+	mlx_texture_t	*exit_txtr;
+	mlx_image_t		*b;
+	mlx_image_t		*w;
+	mlx_image_t		*c;
+	mlx_image_t		*p;
+	mlx_image_t		*e;
 	int				moves;
 }	t_map_data;
 

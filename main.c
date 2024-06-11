@@ -48,7 +48,7 @@ static int	game(t_map_data *data)
 	if (!data->mlx)
 		return (0);
 	if (!get_textures(data)
-		|| mlx_image_to_window(data->mlx, data->sand, 0, 0 < 0)
+		|| mlx_image_to_window(data->mlx, data->b, 0, 0 < 0)
 		|| !draw_map(data))
 	{
 		delete_textures(data);
@@ -57,7 +57,7 @@ static int	game(t_map_data *data)
 	}
 	mlx_key_hook(data->mlx, &movement, data);
 	mlx_loop(data->mlx);
-	if (data->crab->enabled == true)
+	if (data->p->enabled == true)
 		ft_printf("You exited the game\n");
 	delete_textures(data);
 	mlx_terminate(data->mlx);

@@ -14,16 +14,16 @@
 
 void	delete_textures(t_map_data *data)
 {
-	if (data->sand_t)
-		mlx_delete_texture(data->sand_t);
-	if (data->plant_t)
-		mlx_delete_texture(data->plant_t);
-	if (data->crab_t)
-		mlx_delete_texture(data->crab_t);
-	if (data->shell_t)
-		mlx_delete_texture(data->shell_t);
-	if (data->hole_t)
-		mlx_delete_texture(data->hole_t);
+	if (data->background_txtr)
+		mlx_delete_texture(data->background_txtr);
+	if (data->wall_txtr)
+		mlx_delete_texture(data->wall_txtr);
+	if (data->player_txtr)
+		mlx_delete_texture(data->player_txtr);
+	if (data->collectible_txtr)
+		mlx_delete_texture(data->collectible_txtr);
+	if (data->exit_txtr)
+		mlx_delete_texture(data->exit_txtr);
 }
 
 void	free_id_map(int	**id_map, int j)

@@ -43,13 +43,13 @@ static void	get_map_height(int fd, t_map_data *data, int *flag)
 
 	data->size.y = 0;
 	line = get_next_line(fd, flag);
-	while (line && !*flag)
+	while (line && !(*flag))
 	{
 		data->size.y++;
 		free(line);
 		line = get_next_line(fd, flag);
 	}
-	if (flag)
+	if (*flag)
 		free(line);
 	close(fd);
 	if (data->size.y == 0 && !*flag)
