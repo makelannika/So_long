@@ -5,7 +5,7 @@
 
 - **Gameplay**:
   - Navigate a map to collect all items and reach the exit.
-  - Movement controlled with the **W**, **A**, **S**, and **D** keys.
+  - Movement controlled with the **Left**, **Right**, **Up**, and **Down** arrow keys.
   - Displays the number of moves made by the player in the terminal.
 - **Smooth User Interaction**:
   - Interactive 2D view rendered in a window using MiniLibX.
