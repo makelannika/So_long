@@ -1,7 +1,6 @@
+## So_long
+2D game built in C using the **MiniLibX** library. In this game, the player navigates through a map to collect items and escape through an exit.
 
-**so_long** is a 2D game built in C using the **MiniLibX** library. The project showcases fundamental skills in computer graphics, event handling, and game logic. In this game, the player navigates through a map to collect items and escape through an exit, all while following specific gameplay mechanics.
-
-## Features
 
 - **Gameplay**:
   - Navigate a map to collect all items and reach the exit.
@@ -13,9 +12,8 @@
 - **Clean Exit**:
   - Quit the game by pressing **ESC** or clicking the close button.
 - **Map Parsing**:
-  - Validates `.ber` map files for proper configuration.
+  - Validates a `.ber` map file provided.
   - Ensures maps are rectangular, enclosed by walls, and contain required elements.
-
 
 ### Game Rules
 - **Objective**: Collect all collectibles (`C`) on the map and exit through the designated exit (`E`).
@@ -23,7 +21,7 @@
 - The game ends when the player successfully exits after collecting all items.
 
 ### Map Requirements
-Maps must:
+Map must:
 - Be a `.ber` file.
 - Contain only these characters:
   - `0`: Empty space.
@@ -43,3 +41,8 @@ Maps must:
 1000011111001
 1P0011E000001
 1111111111111
+```
+
+```Bash
+./so_long map.ber
+```
