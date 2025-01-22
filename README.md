@@ -12,7 +12,7 @@
 - **Clean Exit**:
   - Quit the game by pressing **ESC** or clicking the close button.
 - **Map Parsing**:
-  - Validates provided `.ber` map file for proper configuration.
+  - Validates a `.ber` map file for proper configuration.
   - Ensures maps are rectangular, enclosed by walls, and contain required elements.
 
 ### Game Rules
