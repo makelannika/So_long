@@ -12,7 +12,7 @@
 - **Clean Exit**:
   - Quit the game by pressing **ESC** or clicking the close button.
 - **Map Parsing**:
-  - Validates a `.ber` map file provided.
+  - Validates provided `.ber` map file for proper configuration.
   - Ensures maps are rectangular, enclosed by walls, and contain required elements.
 
 ### Game Rules
@@ -34,7 +34,7 @@ Map must:
   - Have exactly one `P` and `E`, and at least one `C`.
   - Provide a valid path connecting the player, all collectibles, and the exit.
 
-### Example Map
+Example Map:
 ```txt
 1111111111111
 10010000000C1
